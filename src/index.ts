@@ -1,6 +1,6 @@
-import toSundanese from "./functions/toSundanese";
-import toLatin from "./functions/toLatin";
-import SundaHelper from "./helpers/SundaHelper";
-import LatinHelper from "./helpers/LatinHelper";
+import toBalinese from "./functions/toBalinese";
+// import toLatin from "./functions/toLatin";
+import BaliHelper from "./helpers/BaliHelpers";
+// import LatinHelper from "./helpers/LatinHelper";
 
-export { toSundanese, toLatin, SundaHelper, LatinHelper };
+export { toBalinese, BaliHelper };

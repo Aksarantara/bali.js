@@ -11,16 +11,22 @@ function invertMapping(obj: CharacterMapping): CharacterMapping {
   }
   return result;
 }
-namespace SundaConst {
-  /* Regex for various type of valid Latin glyph for Sundanese */
+namespace BaliConst {
+  /* Regex for various type of valid Latin glyph for Balinese */
   const LATIN = {
-    CONSONANTS: `ng|ny|kh|sy|[kgcjtdnpbmyrlwshfqvxz]`,
-    CONSONANTS_RERENGKEN_SONORANT: `[ylr]`,
-    CONSONANTS_RERENGKEN_FINAL: `ng|[rh]`,
-    CONSONANTS_WITHOUT_RERENGKEN_FINAL: `n(?![gy])|k(?!h)|s(?!y)|ny|kh|sy|[gcjtdpbmylwfvqxz]`,
-    DIGITS: `[\\d]+`,
-    NOT_LETTERS: `[^a-zA-Z\\d\\u00C0-\\u00FF]`,
-    VOWELS: `e\`|eu|[aiueoéè]`,
+    CONSONANTS: `\\^t|\\^T|\\^d|\\^D|ng|ny|sh|re|le|[hncrkdtswlpjymgbzfvqDNSTKGCPBJ]`, //
+    CONSONANTS_TENGENAN: `ng|[rh]`,
+    // CONSONANTS_SUALALITA: `dh|sh|DH|^T|^t|[DNSTKGCPBJ]`,
+    CONSONANTS_WITHOUT_TENGENAN: `\\^t|\\^T|\\^d|\\^D|ny|sh|re|le|[nckdtswlpjymgbzfvqDNSTKGCPBJ]`, // 
+    DIGITS: `[\\d]`,
+    DIGITS_PUNC: `[\\d]+|\\/\[:()'"<>{}\\?!]`,
+    HINDU: `OM|\\*|\\||\\~`, 
+    DOT_COMMA: `[.,]`,
+    SPACE: `[_]`,
+    VOWELS: `\\^e|aa|ii|uu|ai|au|ae|oe|ua|ia|[aiueo]`, // 
+    SUARA: `AA|II|UU|AI|AU|[AIUEO]`,
+    // EXCEPT_SWARA: `[^AIUEO]|^AA|^II|^UU|^AI|^AU`,
+    // CAPTURE_RESIDUE: "(?=[A-Za-zÀ-ÿ])(dh|ny|th|ng|kh|dz|sy|gh|NY|[hncrkdtswlpjymgbzfvNKTSPGB])?(dh|ny|th|ng|kh|dz|sy|gh|NY|[hncrkdtswlpjymgbzfvNKTSPGB])?([aiueoxAIUEOXÉÈéè])?",
   };
   /* Regex for various type of valid Sundanese characters glyph */
   const SUNDA = {
@@ -34,19 +40,27 @@ namespace SundaConst {
     SWARA: `[\\u1B83-\\u1B89]`,
   };
   export const REGEX = {
-    /* Capturing Latin characters that corresponds to a valid Sundanese glyph */
+    /* Capturing Latin characters that corresponds to a valid Balinese glyph */
     CAPTURE_LATIN: [
-      `(${LATIN.DIGITS})`,
+      `(${LATIN.SPACE})`,
       `|`,
-      `(${LATIN.NOT_LETTERS})`,
+      `(${LATIN.DIGITS_PUNC})`,
+      `|`,
+      `(${LATIN.SUARA})`,
+      `|`,
+      `(${LATIN.HINDU})`,
       `|`,
       `(${LATIN.CONSONANTS})?`,
-      `(${LATIN.CONSONANTS_RERENGKEN_SONORANT})?`,
+      `(?!${LATIN.SPACE}(?!${LATIN.VOWELS}))`,
+      `(${LATIN.CONSONANTS})?`,
       `(${LATIN.VOWELS})`,
-      `((?:${LATIN.CONSONANTS_RERENGKEN_FINAL})(?!${LATIN.VOWELS}))?`,
-      `((?:${LATIN.CONSONANTS_WITHOUT_RERENGKEN_FINAL})(?!${LATIN.VOWELS}))?`,
+      // `(:?${LATIN.VOWELS})?`,
+      `(${LATIN.CONSONANTS_TENGENAN})?`,
+      `(?!${LATIN.VOWELS})`,
       `|`,
       `(${LATIN.CONSONANTS})`,
+      `|`,
+      `(${LATIN.DOT_COMMA})`,
     ].join(""),
     /* Capturing Sundanese characters that corresponds to a valid Latin glyph */
     CAPTURE_SUNDA: [
@@ -62,83 +76,122 @@ namespace SundaConst {
 }
 
 /* Various type of Sundanese characters, accessed with a key of Latin character */
-namespace SundaneseChars {
-  export const SWARA: CharacterMapping = {
-    a: "ᮃ",
-    i: "ᮄ",
-    u: "ᮅ",
-    e: "ᮈ",
-    é: "ᮆ",
-    eu: "ᮉ",
-    o: "ᮇ",
+namespace BalineseChars {
+  export const SUARA: CharacterMapping = {
+    A: "ᬅ",
+    I: "ᬇ",
+    U: "ᬉ",
+    E: "ᬏ",
+    O: "ᬑ",
+    AA: "ᬆ",
+    II: 'ᬈ',
+    UU: 'ᬊ',
+    AI: 'ᬐ',
+    AU: 'ᬒ',
   };
-  export const NGALAGENA: CharacterMapping = {
-    k: "ᮊ",
-    g: "ᮌ",
-    ng: "ᮍ",
-    c: "ᮎ",
-    j: "ᮏ",
-    ny: "ᮑ",
-    t: "ᮒ",
-    d: "ᮓ",
-    n: "ᮔ",
-    p: "ᮕ",
-    b: "ᮘ",
-    m: "ᮙ",
-    y: "ᮚ",
-    r: "ᮛ",
-    l: "ᮜ",
-    w: "ᮝ",
-    s: "ᮞ",
-    h: "ᮠ",
-    f: "ᮖ",
-    q: "ᮋ",
-    v: "ᮗ",
-    x: "ᮟ",
-    z: "ᮐ",
-    kh: "ᮮ",
-    sy: "ᮯ",
+  export const WIANJANA: CharacterMapping = {
+    k: "ᬓ",
+    K: "ᬔ",
+    g: "ᬕ",
+    G: "ᬖ",
+    ng: "ᬗ",
+    c: "ᬘ",
+    C: "ᬙ",
+    j: "ᬚ",
+    J: "ᬛ",
+    ny: "ᬜ",
+    y: "ᬬ",
+    t: "ᬢ",
+    T: "ᬝ",
+    "^t": "ᬣ",
+    "^T": "ᬞ",
+    d: "ᬤ",
+    D: "ᬟ",
+    "^d": "ᬥ",
+    "^D": "ᬠ",
+    n: "ᬦ",
+    N: "ᬡ",
+    r: "ᬭ",
+    s: "ᬲ",
+    S: "ᬱ",
+    sh: "ᬰ",
+    p: "ᬧ",
+    P: "ᬨ",
+    b: "ᬩ",
+    B: "ᬪ",
+    m: "ᬫ",
+    l: "ᬮ",
+    w: "ᬯ",
+    h: "ᬳ",
+    f: "ᬧ",
+    q: "ᬓ",
+    v: "ᬧ",
+    z: "ᬲ",
+    "adeg-adeg": "\u1B44"
   };
-  export const RARANGKEN: CharacterMapping = {
-    i: "ᮤ",
-    u: "ᮥ",
-    e: "ᮨ",
-    é: "ᮦ",
-    eu: "ᮩ",
-    o: "ᮧ",
-    r: "ᮁ",
-    ng: "ᮀ",
-    h: "ᮂ",
-    pamaeh: "᮪",
+  export const PANGANGGE_SUARA: CharacterMapping = {
+    i: "\u1B36",
+    u: "\u1B38",
+    e: "\u1B42",
+    é: "\u1B3E",
+    o: "\u1B40",
+    aa: "\u1B35",
+    ii: "\u1B37",
+    uu: "\u1B39",
+    ai: "\u1B3F",
+    au: "\u1B41",
+    ae: "\u1B42",
+    oe: "\u1B43",
+    ua: "\u1B44\u1B2F",
+    ia: "\u1B44\u1B2C",
+    // ro: "\u1B3B",
+    // lo: "\u1B3D",
   };
-  export const RARANGKEN_SONORANT: CharacterMapping = {
-    l: "ᮣ",
-    r: "ᮢ",
-    y: "ᮡ",
-  };
+  export const PANGANGGE_TENGENAN: CharacterMapping = {
+    ng: "\u1B02",
+    r: "\u1B03",
+    h: "\u1B04",
+  }
   export const ANGKA: CharacterMapping = {
-    "1": "᮱",
-    "2": "᮲",
-    "3": "᮳",
-    "4": "᮴",
-    "5": "᮵",
-    "6": "᮶",
-    "7": "᮷",
-    "8": "᮸",
-    "9": "᮹",
-    "0": "᮰",
+    "1": "᭑",
+    "2": "᭒",
+    "3": "᭓",
+    "4": "᭔",
+    "5": "᭕",
+    "6": "᭖",
+    "7": "᭗",
+    "8": "᭘",
+    "9": "᭙",
+    "0": "᭐",
   };
+  export const PADA: CharacterMapping = {
+    ",": "᭞",
+    ".": "᭟",
+    ":": "᭝",
+    "/": "᭟᭜᭟",
+    '"': "᭚",
+  }
+  export const HINDU_SIGN: CharacterMapping = {
+    "*": "\u1B01",
+    "~": "\u1B00",
+    "|": "᭛",
+    "OM": "ᬒᬁ" 
+  }
+
+  export const SPACE: CharacterMapping = {
+    "_": " ",
+  }
 }
 
 /* Various type of Latin characters, accessed with a key of Sundanese character */
 namespace LatinChars {
-  export const SWARA: CharacterMapping = invertMapping(SundaneseChars.SWARA);
-  export const NGALAGENA: CharacterMapping = invertMapping(SundaneseChars.NGALAGENA);
-  export const RARANGKEN: CharacterMapping = invertMapping(SundaneseChars.RARANGKEN);
-  export const RARANGKEN_SONORANT: CharacterMapping = invertMapping(
-    SundaneseChars.RARANGKEN_SONORANT
-  );
-  export const ANGKA: CharacterMapping = invertMapping(SundaneseChars.ANGKA);
+  export const SUARA: CharacterMapping = invertMapping(BalineseChars.SUARA);
+  export const WIANJANA: CharacterMapping = invertMapping(BalineseChars.WIANJANA);
+  export const PANGANGGE_TENGENAN: CharacterMapping = invertMapping(BalineseChars.PANGANGGE_TENGENAN);
+  export const PANGANGGE_SUARA: CharacterMapping = invertMapping(BalineseChars.PANGANGGE_SUARA);
+  export const ANGKA: CharacterMapping = invertMapping(BalineseChars.ANGKA);
+  export const PADA: CharacterMapping = invertMapping(BalineseChars.PADA);
+  export const HINDU_SIGN: CharacterMapping = invertMapping(BalineseChars.HINDU_SIGN);
 }
 
-export { LatinChars, SundaneseChars, SundaConst };
+export { LatinChars, BalineseChars, BaliConst };
