@@ -37,7 +37,7 @@ const toBalinese = (input: string): string => {
  */
 const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string => {
   /* Assign each capture groups into variable names */
-  const [
+  let [
     space,
     digit_punc,
     suara,
@@ -60,13 +60,14 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
     vow: ${vowel},
     teng: ${tengenan},
     consS: ${consonantStandalone},
-    dot: ${dotcomma}` 
+    dot: ${dotcomma}`
   )
 
   const builder = new SyllableBuilder();
 
   if (space != null) {
-    return builder.build(BaliHelper.getSpace(space))
+    if (space == " ") return builder.build("\u200B")
+    if (space == "_") return builder.build("")
   }
 
   /* Converts syllable containing numbers */
@@ -77,7 +78,7 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
         numbers += BaliHelper.getNumber(each);
       }
       return builder.build("᭞" + numbers + "᭞");
-    } 
+    }
     return builder.build(BaliHelper.getPada(digit_punc));
   }
 
@@ -92,6 +93,16 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
   /* Converts syllable containing main letters */
   if (consonantStandalone == null) {
     if (consonant != null) {
+      if (consonant == "n" && (pasangan == "c" || pasangan == "j")) {consonant = "ny"}
+      else if (consonant == "s" && pasangan == "c") {consonant = "sh"}
+      else if (consonant == "d" && pasangan == "ny") {consonant = "j"}
+      else if (consonant == "s" && pasangan == "T") {consonant = "S"}
+      else if (consonant == "n" && pasangan == "B") {consonant = "m"}
+      else if (pasangan == "n" && consonant == "r") {pasangan = "N"}
+      else if (pasangan == "r" && vowel == "x") {vowel = "rx"; pasangan = "";}
+      else if (pasangan == "l" && vowel == "x") {vowel = "lx"; pasangan = "";}
+      else if (consonant == "r" && vowel == "x") {vowel = "rx"; consonant = "";}
+      else if (consonant == "l" && vowel == "x") {vowel = "lx"; consonant = "";}
       /* Add main consonant */
       builder.add(BaliHelper.getMain(consonant, prev_char));
       /* Add consonant pasangan */

@@ -33,7 +33,6 @@ namespace BaliHelper {
   export const getSuara = (char: string): string => {
     if (char == null) return "";
     if (char === "a") return "";
-    if (char === "^e") return BalineseChars.PANGANGGE_SUARA["e"];
     if (char in BalineseChars.PANGANGGE_SUARA) return BalineseChars.PANGANGGE_SUARA[char];
     return char;
   };
@@ -75,16 +74,6 @@ namespace BaliHelper {
   export const getHindu = (char: string): string => {
     if (char == null) return "";
     if (char in BalineseChars.HINDU_SIGN) return BalineseChars.HINDU_SIGN[char];
-    return char;
-  };
-
-  /**
-   * @description Returns the corresponding Balinese special Hindu sign
-   * @param char The character to be transliterated
-   */
-  export const getSpace = (char: string): string => {
-    if (char == null) return "";
-    if (char in BalineseChars.SPACE) return BalineseChars.SPACE[char];
     return char;
   };
 

@@ -14,16 +14,16 @@ function invertMapping(obj: CharacterMapping): CharacterMapping {
 namespace BaliConst {
   /* Regex for various type of valid Latin glyph for Balinese */
   const LATIN = {
-    CONSONANTS: `\\^t|\\^T|\\^d|\\^D|ng|ny|sh|re|le|[hncrkdtswlpjymgbzfvqDNSTKGCPBJ]`, //
+    CONSONANTS: `\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJ]`, //
     CONSONANTS_TENGENAN: `ng|[rh]`,
     // CONSONANTS_SUALALITA: `dh|sh|DH|^T|^t|[DNSTKGCPBJ]`,
-    CONSONANTS_WITHOUT_TENGENAN: `\\^t|\\^T|\\^d|\\^D|ny|sh|re|le|[nckdtswlpjymgbzfvqDNSTKGCPBJ]`, // 
+    CONSONANTS_WITHOUT_TENGENAN: `\\^t|\\^T|\\^d|\\^D|ny|sh|[nckdtswlpjymgbzfvqDNSTKGCPBJ]`, //
     DIGITS: `[\\d]`,
-    DIGITS_PUNC: `[\\d]+|\\/\[:()'"<>{}\\?!]`,
-    HINDU: `OM|\\*|\\||\\~`, 
-    DOT_COMMA: `[.,]`,
-    SPACE: `[_]`,
-    VOWELS: `\\^e|aa|ii|uu|ai|au|ae|oe|ua|ia|[aiueo]`, // 
+    DIGITS_PUNC: `[\\d]+|\\\/\[:()'"<>{}\]?!]`,
+    HINDU: `OM|\\*|\\||\\~`,
+    DOT_COMMA: `[.,\\/":]`,
+    SPACE: `[ _]`,
+    VOWELS: `aa|ai|au|ae|ao|ia|ii|iu|ie|io|ua|ui|uu|ue|uo|ea|ei|eu|eo|xa|xi|xu|xe|xo|oa|oi|ou|oe|UA|IA|[aiueox]`, //
     SUARA: `AA|II|UU|AI|AU|[AIUEO]`,
     // EXCEPT_SWARA: `[^AIUEO]|^AA|^II|^UU|^AI|^AU`,
     // CAPTURE_RESIDUE: "(?=[A-Za-zÀ-ÿ])(dh|ny|th|ng|kh|dz|sy|gh|NY|[hncrkdtswlpjymgbzfvNKTSPGB])?(dh|ny|th|ng|kh|dz|sy|gh|NY|[hncrkdtswlpjymgbzfvNKTSPGB])?([aiueoxAIUEOXÉÈéè])?",
@@ -127,23 +127,46 @@ namespace BalineseChars {
     q: "ᬓ",
     v: "ᬧ",
     z: "ᬲ",
-    "adeg-adeg": "\u1B44"
+    "adeg-adeg": "\u1B44",
   };
   export const PANGANGGE_SUARA: CharacterMapping = {
     i: "\u1B36",
     u: "\u1B38",
-    e: "\u1B42",
-    é: "\u1B3E",
+    x: "\u1B42",
+    e: "\u1B3E",
     o: "\u1B40",
     aa: "\u1B35",
     ii: "\u1B37",
     uu: "\u1B39",
     ai: "\u1B3F",
     au: "\u1B41",
-    ae: "\u1B42",
-    oe: "\u1B43",
-    ua: "\u1B44\u1B2F",
-    ia: "\u1B44\u1B2C",
+    ae: "\u1B0F",
+    ao: "\u1B33\u1B40",
+    ia: "\u1B36\u1B2C",
+    iu: "\u1B36\u1B2C\u1B38",
+    ie: "\u1B36\u1B2C\u1B3E",
+    io: "\u1B36\u1B2C\u1B40",
+    ua: "\u1B38\u1B2F",
+    ui: "\u1B38\u1B2F\u1B36",
+    ue: "\u1B38\u1B2F\u1B3E",
+    uo: "\u1B38\u1B2F\u1B40",
+    ea: "\u1B3E\u1B2C",
+    ei: "\u1B3E\u1B33\u1B36",
+    eu: "\u1B3E\u1B33\u1B38",
+    eo: "\u1B3E\u1B2C\u1B40",
+    xa: "\u1B42\u1B33",
+    xi: "\u1B42\u1B33\u1B36",
+    xu: "\u1B42\u1B33\u1B38",
+    xe: "\u1B42\u1B0F",
+    xo: "\u1B42\u1B33\u1B40",
+    oa: "\u1B40\u1B2F",
+    oi: "\u1B40\u1B33\u1B36",
+    ou: "\u1B40\u1B33\u1B38",
+    oe: "\u1B40\u1B2F\u1B3E",
+    UA: "\u1B44\u1B2F",
+    IA: "\u1B44\u1B2C",
+    rx: "\u1B0B",
+    lx: "\u1B0D",
     // ro: "\u1B3B",
     // lo: "\u1B3D",
   };
@@ -175,11 +198,7 @@ namespace BalineseChars {
     "*": "\u1B01",
     "~": "\u1B00",
     "|": "᭛",
-    "OM": "ᬒᬁ" 
-  }
-
-  export const SPACE: CharacterMapping = {
-    "_": " ",
+    "OM": "ᬒᬁ"
   }
 }
 
