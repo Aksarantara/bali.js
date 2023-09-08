@@ -1,5 +1,5 @@
 import { preferNative as matchAll } from "string-match-all";
-import { BaliChars, BaliConst } from "../constants/constants";
+import { BaliConst } from "../constants/constants";
 import LatinHelper from "../helpers/LatinHelper";
 import SyllableBuilder from "../helpers/SyllableBuilder";
 
@@ -12,7 +12,7 @@ import SyllableBuilder from "../helpers/SyllableBuilder";
  * toLatin("ꦏꦂꦪ")
  * // => karya
  */
-export const toLatin = (input: string, reversible: boolean = true): string => {
+export const toLatin = (input: string, reversible: boolean = true, sasak: boolean = false): string => {
   /* Trim input */
   input = input.trim();
 
@@ -26,7 +26,7 @@ export const toLatin = (input: string, reversible: boolean = true): string => {
   let output = "";
   if (syllables.length > 0) {
     for (const group of syllables) {
-      output += getTransliteration(group, reversible);
+      output += getTransliteration(group, reversible, sasak);
     }
   }
   return output.replace(/\s{2,}/g, " ");
@@ -35,7 +35,7 @@ export const toLatin = (input: string, reversible: boolean = true): string => {
 /**
  * @description Converts the already broken down syllable into Sundanese script
  */
-const getTransliteration = (groups: RegExpMatchArray, reversible: boolean = true): string => {
+const getTransliteration = (groups: RegExpMatchArray, reversible: boolean = true, sasak: boolean = false): string => {
   /* Assign each capture groups into variable names */
   const [space, angka, wianjana, rerekan, adeg, vowel, tengenan, suara, tengenan2, pada, hindu] = groups.slice(1, 12);
   // console.log(
@@ -52,7 +52,7 @@ const getTransliteration = (groups: RegExpMatchArray, reversible: boolean = true
   /* Converts syllable containing letters */
   if (wianjana != null) {
     /* Add cecak telu to get loan letter if cecak telu indeed exists in the syllable */
-    builder.add(LatinHelper.getLetter(wianjana + (rerekan ?? "")));
+    builder.add(LatinHelper.getLetter(wianjana + (rerekan ?? ""), sasak));
 
     /* if there's no adeg, there might be consonant sign or sandhangan*/
     if (adeg == null) {

@@ -12,7 +12,7 @@ import { BaliConst } from "../constants/constants";
  * toSundanese("Wih, geulis euy!")
  * // => ᮝᮤᮂ, ᮌᮩᮜᮤᮞ᮪ ᮉᮚ᮪!
  */
-const toBalinese = (input: string): string => {
+const toBalinese = (input: string, toSasak: boolean = false, debug: boolean = false): string => {
   /* Normalize input */
   input = input.trim();
   // console.log(BaliConst.REGEX.CAPTURE_LATIN);
@@ -27,7 +27,7 @@ const toBalinese = (input: string): string => {
   let output = "";
   if (syllables.length > 0) {
     for (const group of syllables) {
-      output += getTransliteration(group, output.charAt(output.length - 1));
+      output += getTransliteration(group, output.charAt(output.length - 1), toSasak, debug);
     }
   }
   return output;
@@ -36,23 +36,31 @@ const toBalinese = (input: string): string => {
 /**
  * @description Converts the already broken down syllable into Sundanese script
  */
-const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string => {
+const getTransliteration = (
+  groups: RegExpMatchArray,
+  prev_char: string,
+  sasak: boolean = false,
+  debug: boolean = false
+): string => {
   /* Assign each capture groups into variable names */
   let [space, digit_punc, suara, hindu, consonant, pasangan, vowel, tengenan, consonantStandalone, dotcomma] =
     groups.slice(1, 10);
-  // console.log(
-  //   `
-  //   space: ${space},
-  //   digpunc: ${digit_punc},
-  //   suara: ${suara},
-  //   hnd: ${hindu},
-  //   cons: ${consonant},
-  //   psgn: ${pasangan},
-  //   vow: ${vowel},
-  //   teng: ${tengenan},
-  //   consS: ${consonantStandalone},
-  //   dot: ${dotcomma}`
-  // );
+  if (debug) {
+    console.log(BaliConst.REGEX.CAPTURE_LATIN);
+    console.log(
+      `
+    space: ${space},
+    digpunc: ${digit_punc},
+    suara: ${suara},
+    hnd: ${hindu},
+    cons: ${consonant},
+    psgn: ${pasangan},
+    vow: ${vowel},
+    teng: ${tengenan},
+    consS: ${consonantStandalone},
+    dot: ${dotcomma}`
+    );
+  }
 
   const builder = new SyllableBuilder();
 
@@ -78,7 +86,7 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
   }
 
   if (hindu != null) {
-    return builder.build(BaliHelper.getFinal(hindu));
+    return builder.build(BaliHelper.getHindu(hindu));
   }
 
   /* Converts syllable containing main letters */
@@ -101,7 +109,7 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
         consonant = consonant + vowel;
         vowel = "";
       }
-      builder.add(BaliHelper.getMain(consonant, prev_char));
+      builder.add(BaliHelper.getMain(consonant, prev_char, sasak));
 
       /* Add main consonant */
       /* Add consonant pasangan */
@@ -110,11 +118,11 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
           vowel = pasangan + "x";
           pasangan = "";
         }
-        builder.add(BaliHelper.getPasangan(pasangan));
+        builder.add(BaliHelper.getPasangan(pasangan, sasak));
       }
       /* Add vowel sign */
       builder.add(BaliHelper.getSuara(vowel));
-    } else {
+    } else if (consonant == null && vowel != null) {
       /* Add standalone vowel character */
       builder.add(BaliHelper.getMain("h"));
       builder.add(BaliHelper.getSuara(vowel));
@@ -125,7 +133,7 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
     }
   } else {
     /* Add muted standalone consonant */
-    builder.add(BaliHelper.getFinal(consonantStandalone));
+    builder.add(BaliHelper.getFinal(consonantStandalone, sasak));
   }
 
   if (dotcomma != null) {

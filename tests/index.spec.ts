@@ -40,15 +40,21 @@ describe("Basic functionality tests", () => {
     expect(result).toEqual(expected);
   });
 
-  // it("should convert punctuations", () => {
-  //   const result = toBalinese(".");
-  //   const expected = "᭚ᬧᬤ​᭞᭑᭗᭞​ᬅᬕᬸᬲ᭄ᬢᬸᬲ᭄​᭞᭑᭙᭔᭕᭞​᭝​ᬇᬦ᭄ᬤᭀᬦᬾᬲᬶ​ᬬ᭟​ᬫᬾᬃᬤᬾᬓ᭟​᭜​᭟";
-  //   expect(result).toEqual(expected);
-  // });
+  it("should convert all Sasak", () => {
+    const result = toBalinese("faqivuzxng miTSKHoSY", true, false);
+    const expected = "ᭈᭅᬶᭉᬸᭊᭂᬂ​ᬫᬶᭇ᭄ᭆᭀᭋ᭄";
+    expect(result).toEqual(expected);
+  });
+
+  it("should convert punctuations", () => {
+    const result = toBalinese('.,|/*~":@', false, false);
+    const expected = "᭚ᬧᬤ​᭞᭑᭗᭞​ᬅᬕᬸᬲ᭄ᬢᬸᬲ᭄​᭞᭑᭙᭔᭕᭞​᭝​ᬇᬦ᭄ᬤᭀᬦᬾᬲᬶ​ᬬ᭟​ᬫᬾᬃᬤᬾᬓ᭟​᭜​᭟";
+    expect(result).toEqual(expected);
+  });
 });
 
 describe("Basic functionality tests", () => {
-  it("should convert all basic Wianjana", () => {
+  it("should convert all basic Wianjana toLatin", () => {
     const result = toLatin("ᬓᬔᬕᬖᬗᬘᬙᬚᬛᬜᬬᬢᬝᬤᬟᬦᬡᬭᬲᬱᬰᬧᬨᬩᬪᬫᬮᬯᬳᬧᬓᬧᬲ");
     const expected = "kaKagaGangacaCajaJanyayataTadaDanaNarasaSashapaPabaBamalawahapakapasa";
     expect(result).toEqual(expected);
@@ -84,6 +90,12 @@ describe("Basic functionality tests", () => {
   it("should convert special assimilation cases", () => {
     const result = toLatin("ᬧ᭄ᬭᬩᬸ​ᬓᭂᬋᬂ​ᬧᬼᬘᬶᬂ​ᬳᬜ᭄ᬚᬶᬂ​ᬧᬰ᭄ᬘᬤ᭄​ᬬᬚ᭄ᬜ​ᬓᬃᬡ​ᬤᬸᬱ᭄ᬝ​ᬢᬫ᭄ᬪᬓ᭄​ᬌᬗᬶ​ᬎᬗᬶ​ᬩᬻᬲᬎᬫ᭄");
     const expected = "prabu kxrxng plxcing hanyjing pashcad yajnya karNa duSTa tamBak Rxngi Lxngi bRxsaLxm";
+    expect(result).toEqual(expected);
+  });
+
+  it("should convert all Sasak", () => {
+    const result = toLatin("ᭈᭅᬶᭉᬸᭊᭂᬂ​ᬫᬶᭇ᭄ᭆᭀᭋ᭄", true, true);
+    const expected = "faqivuzxng miTSKHoSY";
     expect(result).toEqual(expected);
   });
 
@@ -133,6 +145,12 @@ describe("Basic functionality tests toStandardLatin", () => {
   it("should convert special assimilation cases", () => {
     const result = toLatin("ᬧ᭄ᬭᬩᬸ​ᬓᭂᬋᬂ​ᬧᬼᬘᬶᬂ​ᬳᬜ᭄ᬚᬶᬂ​ᬧᬰ᭄ᬘᬤ᭄​ᬬᬚ᭄ᬜ​ᬓᬃᬡ​ᬤᬸᬱ᭄ᬝ​ᬢᬫ᭄ᬪᬓ᭄​ᬌᬗᬶ​ᬎᬗᬶ​ᬩᬻᬲᬎᬫ᭄", false);
     const expected = "prabu kěṛěng pḷěcing hanyjing paścad yajnya karṇa duṣṭa tambhak ṝěngi ḹěngi bṝěsaḹěm";
+    expect(result).toEqual(expected);
+  });
+
+  it("should convert all Sasak", () => {
+    const result = toLatin("ᭈᭅᬶᭉᬸᭊᭂᬂ​ᬫᬶᭇ᭄ᭆᭀᭋ᭄", false, true);
+    const expected = "faqivuzěng mitsḫosy";
     expect(result).toEqual(expected);
   });
 

@@ -8,11 +8,12 @@ namespace BaliHelper {
    * @description Returns the corresponding main consonant character
    * @param char The character to be transliterated
    */
-  export const getMain = (char: string, prev_char?: string): string => {
+  export const getMain = (char: string, prev_char?: string, sasak: boolean = false): string => {
     if (char == null) return "";
     if (char in BaliChars.SUARA) return BaliChars.SUARA[char];
     if (char == "n" && prev_char == "\u1B03") return BaliChars.WIANJANA["N"];
-    if (char in BaliChars.WIANJANA) return BaliChars.WIANJANA[char];
+    if (char in BaliChars.WIANJANA && !sasak) return BaliChars.WIANJANA[char];
+    if (char in BaliChars.SASAK && sasak) return BaliChars.SASAK[char];
     return char;
   };
 
@@ -41,9 +42,10 @@ namespace BaliHelper {
    * @description Returns the corresponding pasangan consonant character
    * @param char The character to be transliterated
    */
-  export const getPasangan = (char: string): string => {
+  export const getPasangan = (char: string, sasak: boolean = false): string => {
     if (char == null) return "";
-    if (char in BaliChars.WIANJANA) return BaliChars.WIANJANA["adeg-adeg"] + BaliChars.WIANJANA[char];
+    if (char in BaliChars.WIANJANA && !sasak) return BaliChars.WIANJANA["adeg-adeg"] + BaliChars.WIANJANA[char];
+    if (char in BaliChars.SASAK && sasak) return BaliChars.SASAK["adeg-adeg"] + BaliChars.SASAK[char];
     return char;
   };
 
@@ -51,9 +53,10 @@ namespace BaliHelper {
    * @description Returns the corresponding final (muted) consonant character
    * @param char The character to be transliterated
    */
-  export const getFinal = (char: string): string => {
+  export const getFinal = (char: string, sasak: boolean = false): string => {
     if (char == null) return "";
-    if (char in BaliChars.WIANJANA) return BaliChars.WIANJANA[char] + BaliChars.WIANJANA["adeg-adeg"];
+    if (char in BaliChars.WIANJANA && !sasak) return BaliChars.WIANJANA[char] + BaliChars.WIANJANA["adeg-adeg"];
+    if (char in BaliChars.SASAK && sasak) return BaliChars.SASAK[char] + BaliChars.SASAK["adeg-adeg"];
     return char;
   };
 

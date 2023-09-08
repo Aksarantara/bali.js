@@ -8,10 +8,11 @@ namespace LatinHelper {
    * @description Returns the corresponding Ngalagena and Swara character
    * @param char The character to be transliterated
    */
-  export const getLetter = (char: string): string => {
+  export const getLetter = (char: string, sasak: boolean = false): string => {
     if (char == null) return "";
     if (char in LatinChars.SUARA) return LatinChars.SUARA[char];
-    if (char in LatinChars.WIANJANA) return LatinChars.WIANJANA[char];
+    if (char in LatinChars.WIANJANA && !sasak) return LatinChars.WIANJANA[char];
+    if (char in LatinChars.SASAK && sasak) return LatinChars.SASAK[char];
     return char;
   };
 

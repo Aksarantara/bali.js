@@ -15,12 +15,12 @@ function invertMapping(obj: CharacterMapping): CharacterMapping {
 namespace BaliConst {
   /* Regex for various type of valid Latin glyph for Balinese */
   const LATIN = {
-    CONSONANTS: `\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJRL]`, //
+    CONSONANTS: `KH|TS|SY|\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJRL]`, //
     CONSONANTS_TENGENAN: `ng|[rh]`,
     DIGITS: `[\\d]`,
-    DIGITS_PUNC: `[\\d]+|\\\/\[:()'"<>{}\]?!]`,
-    HINDU: `OM|\\*|\\||\\~`,
-    DOT_COMMA: `[.,\\/":]`,
+    DIGITS_PUNC: `[\\d]+|\\/[:()'"<>{}]?!]`,
+    HINDU: `@|\\*|\\~`,
+    DOT_COMMA: `[.,\\/":\\|]`,
     SPACE: `[ _]`,
     VOWELS: `aa|ai|au|ae|ao|ia|ii|iu|ie|io|ua|ui|uu|ue|uo|ea|ei|eu|eo|xa|xi|xu|xe|xo|oa|oi|ou|oe|UA|IA|[aiueox]`, //
     SUARA: `AA|II|UU|AI|AU|RX|LX|[AIUEO]`,
@@ -30,7 +30,7 @@ namespace BaliConst {
   /* Regex for various type of valid Sundanese characters glyph */
   const BALI = {
     ANGKA: `[\\u1B50-\\u1B59]`,
-    WIANJANA: `[\\u1B13-\\u1B33]`,
+    WIANJANA: `[\\u1B13-\\u1B33\\u1B45-\\u1B4B]`,
     REREKAN: `[\\u1B34]`,
     TENGENAN: `[\\u1B00-\\u1B04]`,
     SUARA: `[\\u1B05-\\u1B0A\\u1B0F-\\u1B12\\u1B0B-\\u1B0E]`,
@@ -46,7 +46,7 @@ namespace BaliConst {
     CAPTURE_LATIN: [
       `(${LATIN.SPACE})`,
       `|`,
-      `(${LATIN.DIGITS_PUNC})`,
+      `(${LATIN.DIGITS})`,
       `|`,
       `(${LATIN.SUARA})`,
       `|`,
@@ -136,6 +136,18 @@ namespace BaliChars {
     z: "ᬲ",
     "adeg-adeg": "\u1B44",
   };
+
+  export const SASAK: CharacterMapping = {
+    ...WIANJANA,
+    f: "ᭈ",
+    q: "ᭅ",
+    v: "ᭉ",
+    z: "ᭊ",
+    KH: "ᭆ",
+    TS: "ᭇ",
+    SY: "ᭋ",
+  };
+
   export const PANGANGGE_SUARA: CharacterMapping = {
     i: "\u1B36",
     u: "\u1B38",
@@ -207,7 +219,7 @@ namespace BaliChars {
   export const HINDU_SIGN: CharacterMapping = {
     "*": "\u1B01",
     "~": "\u1B00",
-    OM: "ᬒᬁ",
+    "@": "ᬒᬁ",
   };
   export const STANDARD_LATIN: CharacterMapping = {
     x: "ě",
@@ -237,6 +249,10 @@ namespace BaliChars {
     sh: "ś",
     P: "ph",
     B: "bh",
+    "@": "Oṁ",
+    TS: "ts",
+    SY: "sy",
+    KH: "ḫ",
   };
 }
 
@@ -247,6 +263,7 @@ namespace LatinChars {
   WIANJANA["ᬓ"] = "k";
   WIANJANA["ᬧ"] = "p";
   WIANJANA["ᬲ"] = "s";
+  export const SASAK: CharacterMapping = invertMapping(BaliChars.SASAK);
   export const PANGANGGE_TENGENAN: CharacterMapping = invertMapping(BaliChars.PANGANGGE_TENGENAN);
   export const PANGANGGE_SUARA: CharacterMapping = invertMapping(BaliChars.PANGANGGE_SUARA);
   export const ANGKA: CharacterMapping = invertMapping(BaliChars.ANGKA);
