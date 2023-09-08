@@ -1,4 +1,4 @@
-import { BalineseChars } from "../constants/constants";
+import { BaliChars } from "../constants/constants";
 
 /**
  * @description Provides many helper function to get Sundanese unicode characters from Latin characters
@@ -10,9 +10,9 @@ namespace BaliHelper {
    */
   export const getMain = (char: string, prev_char?: string): string => {
     if (char == null) return "";
-    if (char in BalineseChars.SUARA) return BalineseChars.SUARA[char];
-    if (char == "n" && prev_char == "\u1B03") return BalineseChars.WIANJANA["N"]
-    if (char in BalineseChars.WIANJANA) return BalineseChars.WIANJANA[char];
+    if (char in BaliChars.SUARA) return BaliChars.SUARA[char];
+    if (char == "n" && prev_char == "\u1B03") return BaliChars.WIANJANA["N"];
+    if (char in BaliChars.WIANJANA) return BaliChars.WIANJANA[char];
     return char;
   };
 
@@ -22,7 +22,7 @@ namespace BaliHelper {
    */
   export const getSonorant = (char: string): string => {
     if (char == null) return "";
-    if (char in BalineseChars.PANGANGGE_TENGENAN) return BalineseChars.PANGANGGE_TENGENAN[char];
+    if (char in BaliChars.PANGANGGE_TENGENAN) return BaliChars.PANGANGGE_TENGENAN[char];
     return char;
   };
 
@@ -33,19 +33,19 @@ namespace BaliHelper {
   export const getSuara = (char: string): string => {
     if (char == null) return "";
     if (char === "a") return "";
-    if (char in BalineseChars.PANGANGGE_SUARA) return BalineseChars.PANGANGGE_SUARA[char];
+    if (char in BaliChars.PANGANGGE_SUARA) return BaliChars.PANGANGGE_SUARA[char];
     return char;
   };
 
-    /**
+  /**
    * @description Returns the corresponding pasangan consonant character
    * @param char The character to be transliterated
    */
-    export const getPasangan = (char: string): string => {
-      if (char == null) return "";
-      if (char in BalineseChars.WIANJANA) return BalineseChars.WIANJANA["adeg-adeg"] + BalineseChars.WIANJANA[char];
-      return char;
-    };
+  export const getPasangan = (char: string): string => {
+    if (char == null) return "";
+    if (char in BaliChars.WIANJANA) return BaliChars.WIANJANA["adeg-adeg"] + BaliChars.WIANJANA[char];
+    return char;
+  };
 
   /**
    * @description Returns the corresponding final (muted) consonant character
@@ -53,7 +53,7 @@ namespace BaliHelper {
    */
   export const getFinal = (char: string): string => {
     if (char == null) return "";
-    if (char in BalineseChars.WIANJANA) return BalineseChars.WIANJANA[char] + BalineseChars.WIANJANA["adeg-adeg"];
+    if (char in BaliChars.WIANJANA) return BaliChars.WIANJANA[char] + BaliChars.WIANJANA["adeg-adeg"];
     return char;
   };
 
@@ -63,7 +63,7 @@ namespace BaliHelper {
    */
   export const getPada = (char: string): string => {
     if (char == null) return "";
-    if (char in BalineseChars.PADA) return BalineseChars.PADA[char];
+    if (char in BaliChars.PADA) return BaliChars.PADA[char];
     return char;
   };
 
@@ -73,7 +73,7 @@ namespace BaliHelper {
    */
   export const getHindu = (char: string): string => {
     if (char == null) return "";
-    if (char in BalineseChars.HINDU_SIGN) return BalineseChars.HINDU_SIGN[char];
+    if (char in BaliChars.HINDU_SIGN) return BaliChars.HINDU_SIGN[char];
     return char;
   };
 
@@ -83,7 +83,7 @@ namespace BaliHelper {
    */
   export const getNumber = (char: string): string => {
     if (char == null) return "";
-    if (char in BalineseChars.ANGKA) return BalineseChars.ANGKA[char];
+    if (char in BaliChars.ANGKA) return BaliChars.ANGKA[char];
     return char;
   };
 }

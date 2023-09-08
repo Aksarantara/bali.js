@@ -15,6 +15,7 @@ import { BaliConst } from "../constants/constants";
 const toBalinese = (input: string): string => {
   /* Normalize input */
   input = input.trim();
+  // console.log(BaliConst.REGEX.CAPTURE_LATIN);
 
   /*
    * Here, we break down the input on a per syllable basis using RegEx,
@@ -26,7 +27,7 @@ const toBalinese = (input: string): string => {
   let output = "";
   if (syllables.length > 0) {
     for (const group of syllables) {
-      output += getTransliteration(group, output.charAt(output.length-1));
+      output += getTransliteration(group, output.charAt(output.length - 1));
     }
   }
   return output;
@@ -37,37 +38,27 @@ const toBalinese = (input: string): string => {
  */
 const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string => {
   /* Assign each capture groups into variable names */
-  let [
-    space,
-    digit_punc,
-    suara,
-    hindu,
-    consonant,
-    pasangan,
-    vowel,
-    tengenan,
-    consonantStandalone,
-    dotcomma,
-  ] = groups.slice(1, 10);
-  console.log(
-    `
-    space: ${space},
-    digpunc: ${digit_punc},
-    suara: ${suara},
-    hnd: ${hindu},
-    cons: ${consonant},
-    psgn: ${pasangan},
-    vow: ${vowel},
-    teng: ${tengenan},
-    consS: ${consonantStandalone},
-    dot: ${dotcomma}`
-  )
+  let [space, digit_punc, suara, hindu, consonant, pasangan, vowel, tengenan, consonantStandalone, dotcomma] =
+    groups.slice(1, 10);
+  // console.log(
+  //   `
+  //   space: ${space},
+  //   digpunc: ${digit_punc},
+  //   suara: ${suara},
+  //   hnd: ${hindu},
+  //   cons: ${consonant},
+  //   psgn: ${pasangan},
+  //   vow: ${vowel},
+  //   teng: ${tengenan},
+  //   consS: ${consonantStandalone},
+  //   dot: ${dotcomma}`
+  // );
 
   const builder = new SyllableBuilder();
 
   if (space != null) {
-    if (space == " ") return builder.build("\u200B")
-    if (space == "_") return builder.build("")
+    if (space == " ") return builder.build("\u200B");
+    if (space == "_") return builder.build("");
   }
 
   /* Converts syllable containing numbers */
@@ -83,30 +74,42 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
   }
 
   if (suara != null) {
-    return builder.build(BaliHelper.getMain(suara))
+    return builder.build(BaliHelper.getMain(suara));
   }
 
   if (hindu != null) {
-    return builder.build(BaliHelper.getFinal(hindu))
+    return builder.build(BaliHelper.getFinal(hindu));
   }
 
   /* Converts syllable containing main letters */
   if (consonantStandalone == null) {
     if (consonant != null) {
-      if (consonant == "n" && (pasangan == "c" || pasangan == "j")) {consonant = "ny"}
-      else if (consonant == "s" && pasangan == "c") {consonant = "sh"}
-      else if (consonant == "d" && pasangan == "ny") {consonant = "j"}
-      else if (consonant == "s" && pasangan == "T") {consonant = "S"}
-      else if (consonant == "n" && pasangan == "B") {consonant = "m"}
-      else if (pasangan == "n" && consonant == "r") {pasangan = "N"}
-      else if (pasangan == "r" && vowel == "x") {vowel = "rx"; pasangan = "";}
-      else if (pasangan == "l" && vowel == "x") {vowel = "lx"; pasangan = "";}
-      else if (consonant == "r" && vowel == "x") {vowel = "rx"; consonant = "";}
-      else if (consonant == "l" && vowel == "x") {vowel = "lx"; consonant = "";}
-      /* Add main consonant */
+      if (consonant == "n" && (pasangan == "c" || pasangan == "j")) {
+        consonant = "ny";
+      } else if (consonant == "s" && pasangan == "c") {
+        consonant = "sh";
+      } else if (consonant == "d" && pasangan == "ny") {
+        consonant = "j";
+      } else if (consonant == "s" && pasangan == "T") {
+        consonant = "S";
+      } else if (consonant == "n" && pasangan == "B") {
+        consonant = "m";
+      } else if (
+        (consonant == "r" || consonant == "R" || consonant == "l" || consonant == "L") &&
+        (vowel == "x" || vowel == "X")
+      ) {
+        consonant = consonant + vowel;
+        vowel = "";
+      }
       builder.add(BaliHelper.getMain(consonant, prev_char));
+
+      /* Add main consonant */
       /* Add consonant pasangan */
       if (pasangan != null) {
+        if ((pasangan == "r" || pasangan == "R" || pasangan == "l" || pasangan == "L") && vowel == "x") {
+          vowel = pasangan + "x";
+          pasangan = "";
+        }
         builder.add(BaliHelper.getPasangan(pasangan));
       }
       /* Add vowel sign */
@@ -126,9 +129,8 @@ const getTransliteration = (groups: RegExpMatchArray, prev_char: string): string
   }
 
   if (dotcomma != null) {
-    return builder.build(BaliHelper.getPada(dotcomma))
+    return builder.build(BaliHelper.getPada(dotcomma));
   }
-
   return builder.build();
 };
 

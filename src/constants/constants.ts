@@ -11,33 +11,35 @@ function invertMapping(obj: CharacterMapping): CharacterMapping {
   }
   return result;
 }
+
 namespace BaliConst {
   /* Regex for various type of valid Latin glyph for Balinese */
   const LATIN = {
-    CONSONANTS: `\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJ]`, //
+    CONSONANTS: `\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJRL]`, //
     CONSONANTS_TENGENAN: `ng|[rh]`,
-    // CONSONANTS_SUALALITA: `dh|sh|DH|^T|^t|[DNSTKGCPBJ]`,
-    CONSONANTS_WITHOUT_TENGENAN: `\\^t|\\^T|\\^d|\\^D|ny|sh|[nckdtswlpjymgbzfvqDNSTKGCPBJ]`, //
     DIGITS: `[\\d]`,
     DIGITS_PUNC: `[\\d]+|\\\/\[:()'"<>{}\]?!]`,
     HINDU: `OM|\\*|\\||\\~`,
     DOT_COMMA: `[.,\\/":]`,
     SPACE: `[ _]`,
     VOWELS: `aa|ai|au|ae|ao|ia|ii|iu|ie|io|ua|ui|uu|ue|uo|ea|ei|eu|eo|xa|xi|xu|xe|xo|oa|oi|ou|oe|UA|IA|[aiueox]`, //
-    SUARA: `AA|II|UU|AI|AU|[AIUEO]`,
+    SUARA: `AA|II|UU|AI|AU|RX|LX|[AIUEO]`,
     // EXCEPT_SWARA: `[^AIUEO]|^AA|^II|^UU|^AI|^AU`,
     // CAPTURE_RESIDUE: "(?=[A-Za-zÀ-ÿ])(dh|ny|th|ng|kh|dz|sy|gh|NY|[hncrkdtswlpjymgbzfvNKTSPGB])?(dh|ny|th|ng|kh|dz|sy|gh|NY|[hncrkdtswlpjymgbzfvNKTSPGB])?([aiueoxAIUEOXÉÈéè])?",
   };
   /* Regex for various type of valid Sundanese characters glyph */
-  const SUNDA = {
-    ANGKA: `[\\u1BB0-\\u1BB9]`,
-    NGALAGENA: `[\\u1B8A-\\u1BA0\\u1BAE\\u1BAF]`,
-    NOT_SUNDA: `[^\\u1B80-\\u1BA8\\u1BAE-\\u1BB9]`,
-    PIPA: `[|]`,
-    RARANGKEN_SONORANT: `[\\u1BA1-\\u1BA3]`,
-    RARANGKEN_VOWEL: `[\\u1BA4-\\u1BAA]`,
-    RARANGKEN_FINAL: `[\\u1B80-\\u1B82]`,
-    SWARA: `[\\u1B83-\\u1B89]`,
+  const BALI = {
+    ANGKA: `[\\u1B50-\\u1B59]`,
+    WIANJANA: `[\\u1B13-\\u1B33]`,
+    REREKAN: `[\\u1B34]`,
+    TENGENAN: `[\\u1B00-\\u1B04]`,
+    SUARA: `[\\u1B05-\\u1B0A\\u1B0F-\\u1B12\\u1B0B-\\u1B0E]`,
+    VOWELS: `[\\u1B35-\\u1B43\\u1B3A-\\u1B3D]`,
+    ADEG: `[\\u1B44]`,
+    PADA: `[\\u1B5A-\\u1B5D\\u1B5F-\\u1B60]`,
+    HINDU: `[\\u1B00-\\u1B01]`,
+    SPACE: `[ \\u200B\\u200C]`,
+    CARIK: `[\\u1B5E]`,
   };
   export const REGEX = {
     /* Capturing Latin characters that corresponds to a valid Balinese glyph */
@@ -63,20 +65,19 @@ namespace BaliConst {
       `(${LATIN.DOT_COMMA})`,
     ].join(""),
     /* Capturing Sundanese characters that corresponds to a valid Latin glyph */
-    CAPTURE_SUNDA: [
-      `(?:${SUNDA.PIPA})?(${SUNDA.ANGKA})(?:${SUNDA.PIPA})?`,
-      `|`,
-      `(${SUNDA.NOT_SUNDA})`,
-      `|`,
-      `(?:(${SUNDA.NGALAGENA})(${SUNDA.RARANGKEN_SONORANT})?(${SUNDA.RARANGKEN_VOWEL})?`,
-      `|(${SUNDA.SWARA}))`,
-      `(${SUNDA.RARANGKEN_FINAL})?`,
+    CAPTURE_BALI: [
+      `(${BALI.SPACE})`,
+      `|(?:${BALI.CARIK})?(${BALI.ANGKA})(?:${BALI.CARIK})?`,
+      `|(${BALI.WIANJANA})(${BALI.REREKAN})?(${BALI.ADEG})?(${BALI.VOWELS})?(${BALI.TENGENAN})?`,
+      `|(${BALI.SUARA})(${BALI.TENGENAN})?`,
+      `|(${BALI.PADA})`,
+      `|(${BALI.HINDU})`,
     ].join(""),
   };
 }
 
 /* Various type of Sundanese characters, accessed with a key of Latin character */
-namespace BalineseChars {
+namespace BaliChars {
   export const SUARA: CharacterMapping = {
     A: "ᬅ",
     I: "ᬇ",
@@ -84,10 +85,16 @@ namespace BalineseChars {
     E: "ᬏ",
     O: "ᬑ",
     AA: "ᬆ",
-    II: 'ᬈ',
-    UU: 'ᬊ',
-    AI: 'ᬐ',
-    AU: 'ᬒ',
+    II: "ᬈ",
+    UU: "ᬊ",
+    AI: "ᬐ",
+    AU: "ᬒ",
+    RX: "ᬌ",
+    Rx: "ᬌ",
+    LX: "ᬎ",
+    Lx: "ᬎ",
+    rx: "\u1B0B",
+    lx: "\u1B0D",
   };
   export const WIANJANA: CharacterMapping = {
     k: "ᬓ",
@@ -165,8 +172,10 @@ namespace BalineseChars {
     oe: "\u1B40\u1B2F\u1B3E",
     UA: "\u1B44\u1B2F",
     IA: "\u1B44\u1B2C",
-    rx: "\u1B0B",
-    lx: "\u1B0D",
+    rx: "\u1B3A",
+    lx: "\u1B3C",
+    Rx: "\u1B3B",
+    Lx: "\u1B3D",
     // ro: "\u1B3B",
     // lo: "\u1B3D",
   };
@@ -174,7 +183,7 @@ namespace BalineseChars {
     ng: "\u1B02",
     r: "\u1B03",
     h: "\u1B04",
-  }
+  };
   export const ANGKA: CharacterMapping = {
     "1": "᭑",
     "2": "᭒",
@@ -193,24 +202,56 @@ namespace BalineseChars {
     ":": "᭝",
     "/": "᭟᭜᭟",
     '"': "᭚",
-  }
+    "|": "᭛",
+  };
   export const HINDU_SIGN: CharacterMapping = {
     "*": "\u1B01",
     "~": "\u1B00",
-    "|": "᭛",
-    "OM": "ᬒᬁ"
-  }
+    OM: "ᬒᬁ",
+  };
+  export const STANDARD_LATIN: CharacterMapping = {
+    x: "ě",
+    AA: "Ā",
+    II: "Ī",
+    UU: "Ū",
+    AI: "Ai",
+    AU: "Au",
+    RX: "ṝě",
+    LX: "ḹě",
+    Rx: "ṝě",
+    Lx: "ḹě",
+    rx: "ṛě",
+    lx: "ḷě",
+    K: "kh",
+    G: "gh",
+    C: "ch",
+    J: "jh",
+    T: "ṭ",
+    "^t": "ṭh",
+    "^T": "th",
+    D: "ḍ",
+    "^d": "dh",
+    "^D": "ḍh",
+    N: "ṇ",
+    S: "ṣ",
+    sh: "ś",
+    P: "ph",
+    B: "bh",
+  };
 }
 
 /* Various type of Latin characters, accessed with a key of Sundanese character */
 namespace LatinChars {
-  export const SUARA: CharacterMapping = invertMapping(BalineseChars.SUARA);
-  export const WIANJANA: CharacterMapping = invertMapping(BalineseChars.WIANJANA);
-  export const PANGANGGE_TENGENAN: CharacterMapping = invertMapping(BalineseChars.PANGANGGE_TENGENAN);
-  export const PANGANGGE_SUARA: CharacterMapping = invertMapping(BalineseChars.PANGANGGE_SUARA);
-  export const ANGKA: CharacterMapping = invertMapping(BalineseChars.ANGKA);
-  export const PADA: CharacterMapping = invertMapping(BalineseChars.PADA);
-  export const HINDU_SIGN: CharacterMapping = invertMapping(BalineseChars.HINDU_SIGN);
+  export const SUARA: CharacterMapping = invertMapping(BaliChars.SUARA);
+  export const WIANJANA: CharacterMapping = invertMapping(BaliChars.WIANJANA);
+  WIANJANA["ᬓ"] = "k";
+  WIANJANA["ᬧ"] = "p";
+  WIANJANA["ᬲ"] = "s";
+  export const PANGANGGE_TENGENAN: CharacterMapping = invertMapping(BaliChars.PANGANGGE_TENGENAN);
+  export const PANGANGGE_SUARA: CharacterMapping = invertMapping(BaliChars.PANGANGGE_SUARA);
+  export const ANGKA: CharacterMapping = invertMapping(BaliChars.ANGKA);
+  export const PADA: CharacterMapping = invertMapping(BaliChars.PADA);
+  export const HINDU_SIGN: CharacterMapping = invertMapping(BaliChars.HINDU_SIGN);
 }
 
-export { LatinChars, BalineseChars, BaliConst };
+export { LatinChars, BaliChars, BaliConst };

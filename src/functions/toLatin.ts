@@ -1,86 +1,98 @@
-// import { preferNative as matchAll } from "string-match-all";
-// import LatinHelper from "../helpers/LatinHelper";
-// import SyllableBuilder from "../helpers/SyllableBuilder";
-// import { BaliConst, BalineseChars } from "../constants/constants";
+import { preferNative as matchAll } from "string-match-all";
+import { BaliChars, BaliConst } from "../constants/constants";
+import LatinHelper from "../helpers/LatinHelper";
+import SyllableBuilder from "../helpers/SyllableBuilder";
 
-// /**
-//  * @function toLatin
-//  * @description Transliterate a string in Sundanese characters into its corresponding form in Latin.
-//  * @param input The input string in Sundanese script to be converted.
-//  * @returns The converted string in Latin.
-//  * @example
-//  * toLatin("ᮝᮤᮂ, ᮌᮩᮜᮤᮞ᮪ ᮉᮚ᮪!")
-//  * // => wih, geulis euy!
-//  */
-// const toLatin = (input: string): string => {
-//   /* Trim input */
-//   input = input.trim();
+/**
+ * @function toLatin
+ * @description Transliterate a string in Javanese characters into its corresponding form in Latin.
+ * @param input The input string in Javanese script to be converted.
+ * @returns The converted string in Latin.
+ * @example
+ * toLatin("ꦏꦂꦪ")
+ * // => karya
+ */
+export const toLatin = (input: string, reversible: boolean = true): string => {
+  /* Trim input */
+  input = input.trim();
 
-//   /*
-//    * Here, we break down the input on a per-syllable basis using RegEx,
-//    * iterate and feed it into the syllable transliterator,
-//    * and append the result to the output string.
-//    */
-//   const syllables = [...matchAll(input, RegExp(BaliConst.REGEX.CAPTURE_SUNDA, "g"))];
+  /*
+   * Here, we break down the input on a per-syllable basis using RegEx,
+   * iterate and feed it into the syllable transliterator,
+   * and append the result to the output string.
+   */
+  const syllables = [...matchAll(input, RegExp(BaliConst.REGEX.CAPTURE_BALI, "g"))];
 
-//   let output = "";
-//   if (syllables.length > 0) {
-//     for (const group of syllables) {
-//       output += getTransliteration(group);
-//     }
-//   }
-//   return output;
-// };
+  let output = "";
+  if (syllables.length > 0) {
+    for (const group of syllables) {
+      output += getTransliteration(group, reversible);
+    }
+  }
+  return output.replace(/\s{2,}/g, " ");
+};
 
-// /**
-//  * @description Converts the already broken down syllable into Sundanese script
-//  */
-// const getTransliteration = (groups: RegExpMatchArray): string => {
-//   /* Assign each capture groups into variable names */
-//   const [angka, notSunda, ngalagena, rarangkenSonorant, rarangkenVowel, swara, rarangkenFinal] = groups.slice(1, 9);
+/**
+ * @description Converts the already broken down syllable into Sundanese script
+ */
+const getTransliteration = (groups: RegExpMatchArray, reversible: boolean = true): string => {
+  /* Assign each capture groups into variable names */
+  const [space, angka, wianjana, rerekan, adeg, vowel, tengenan, suara, tengenan2, pada, hindu] = groups.slice(1, 12);
+  // console.log(
+  //   `sp: ${space}, ctl: ${rerekan}, agk: ${angka}, ng: ${wianjana}, pgk: ${adeg}, vw: ${vowel}, sf: ${tengenan}, sw: ${suara}, pd: ${pada}`
+  // );
 
-//   const builder = new SyllableBuilder();
+  const builder = new SyllableBuilder(reversible);
 
-//   /* Converts syllable containing numbers */
-//   if (angka != null) {
-//     return builder.build(LatinHelper.getNumber(angka));
-//   }
+  /* Converts syllable containing numbers */
+  if (angka != null) {
+    return builder.build(LatinHelper.getNumber(angka));
+  }
 
-//   /* Converts syllable containing punctuations */
-//   if (notSunda != null) {
-//     return builder.build(notSunda);
-//   }
+  /* Converts syllable containing letters */
+  if (wianjana != null) {
+    /* Add cecak telu to get loan letter if cecak telu indeed exists in the syllable */
+    builder.add(LatinHelper.getLetter(wianjana + (rerekan ?? "")));
 
-//   /* Converts syllable containing letters */
-//   if (ngalagena != null) {
-//     builder.add(LatinHelper.getLetter(ngalagena));
+    /* if there's no adeg, there might be consonant sign or sandhangan*/
+    if (adeg == null) {
+      /* Converts sandhangan */
+      if (vowel != null) {
+        builder.add(LatinHelper.getVowel(vowel));
+      } else {
+        builder.add("a");
+      }
 
-//     /* Converts muted consonant syllable */
-//     if (rarangkenVowel === SundaneseChars.RARANGKEN["pamaeh"]) {
-//       return builder.build();
-//     }
+      /* Converts final sandhangan */
+      if (tengenan != null) {
+        builder.add(LatinHelper.getTengenan(tengenan));
+      }
+    }
+  }
 
-//     /* Converts sonorant rarangken */
-//     if (rarangkenSonorant != null) {
-//       builder.add(LatinHelper.getSonorant(rarangkenSonorant));
-//     }
+  if (suara != null) {
+    /* Converts suara */
+    builder.add(LatinHelper.getLetter(suara));
+    if (tengenan2 != null) {
+      builder.add(LatinHelper.getTengenan(tengenan2));
+    }
+  }
 
-//     /* Converts vowel rarangken */
-//     if (rarangkenVowel != null) {
-//       builder.add(LatinHelper.getRarangken(rarangkenVowel));
-//     } else {
-//       builder.add("a");
-//     }
-//   } else {
-//     /* Add muted standalone consonant */
-//     builder.add(LatinHelper.getLetter(swara));
-//   }
+  if (pada != null) {
+    /* Converts pada */
+    builder.add(LatinHelper.getPada(pada));
+  }
 
-//   if (rarangkenFinal != null) {
-//     builder.add(LatinHelper.getRarangken(rarangkenFinal));
-//   }
+  if (space != null) {
+    /* Modern Carakan is not scriptio continuo, so add space if it exists */
+    builder.add(" ");
+  }
 
-//   return builder.build();
-// };
+  if (hindu != null) {
+    builder.add(LatinHelper.getHindu(hindu));
+  }
 
-// export default toLatin;
+  return builder.build();
+};
+
+export default toLatin;
