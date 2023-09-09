@@ -37,7 +37,7 @@ export const toLatin = (input: string, reversible: boolean = true, sasak: boolea
  */
 const getTransliteration = (groups: RegExpMatchArray, reversible: boolean = true, sasak: boolean = false): string => {
   /* Assign each capture groups into variable names */
-  const [space, angka, wianjana, rerekan, adeg, vowel, tengenan, suara, tengenan2, pada, hindu] = groups.slice(1, 12);
+  const [space, angka, hindu, wianjana, rerekan, adeg, vowel, tengenan, suara, tengenan2, pada] = groups.slice(1, 12);
   // console.log(
   //   `sp: ${space}, ctl: ${rerekan}, agk: ${angka}, ng: ${wianjana}, pgk: ${adeg}, vw: ${vowel}, sf: ${tengenan}, sw: ${suara}, pd: ${pada}`
   // );

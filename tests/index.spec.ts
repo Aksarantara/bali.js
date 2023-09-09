@@ -41,14 +41,14 @@ describe("Basic functionality tests", () => {
   });
 
   it("should convert all Sasak", () => {
-    const result = toBalinese("faqivuzxng miTSKHoSY", true, false);
+    const result = toBalinese("faqivuzxng miTSKHoSY", true);
     const expected = "ᭈᭅᬶᭉᬸᭊᭂᬂ​ᬫᬶᭇ᭄ᭆᭀᭋ᭄";
     expect(result).toEqual(expected);
   });
 
   it("should convert punctuations", () => {
-    const result = toBalinese('.,|/*~":@', false, false);
-    const expected = "᭚ᬧᬤ​᭞᭑᭗᭞​ᬅᬕᬸᬲ᭄ᬢᬸᬲ᭄​᭞᭑᭙᭔᭕᭞​᭝​ᬇᬦ᭄ᬤᭀᬦᬾᬲᬶ​ᬬ᭟​ᬫᬾᬃᬤᬾᬓ᭟​᭜​᭟";
+    const result = toBalinese('pi.Sx,|/*~":@');
+    const expected = "ᬧᬶ᭟ᬱᭂ᭞᭛᭟᭜᭟ᬁᬀ᭚᭝ᬒᬁ";
     expect(result).toEqual(expected);
   });
 });
@@ -99,12 +99,11 @@ describe("Basic functionality tests", () => {
     expect(result).toEqual(expected);
   });
 
-  //
-  //   it("should convert punctuations", () => {
-  //     const result = toLatin(".");
-  //     const expected = "᭚ᬧᬤ​᭞᭑᭗᭞​ᬅᬕᬸᬲ᭄ᬢᬸᬲ᭄​᭞᭑᭙᭔᭕᭞​᭝​ᬇᬦ᭄ᬤᭀᬦᬾᬲᬶ​ᬬ᭟​ᬫᬾᬃᬤᬾᬓ᭟​᭜​᭟";
-  //     expect(result).toEqual(expected);
-  //   });
+  it("should convert punctuations", () => {
+    const result = toLatin("ᬧᬶ᭟ᬱᭂ᭞᭛᭟᭜᭟ᬁᬀ᭚᭝ᬒᬁ");
+    const expected = 'pi.Sx,|/*~":@';
+    expect(result).toEqual(expected);
+  });
 });
 
 describe("Basic functionality tests toStandardLatin", () => {
@@ -154,10 +153,9 @@ describe("Basic functionality tests toStandardLatin", () => {
     expect(result).toEqual(expected);
   });
 
-  //
-  //   it("should convert punctuations", () => {
-  //     const result = toLatin(".");
-  //     const expected = "᭚ᬧᬤ​᭞᭑᭗᭞​ᬅᬕᬸᬲ᭄ᬢᬸᬲ᭄​᭞᭑᭙᭔᭕᭞​᭝​ᬇᬦ᭄ᬤᭀᬦᬾᬲᬶ​ᬬ᭟​ᬫᬾᬃᬤᬾᬓ᭟​᭜​᭟";
-  //     expect(result).toEqual(expected);
-  //   });
+  it("should convert punctuations", () => {
+    const result = toLatin("ᬧᬶ᭟ᬱᭂ᭞᭛᭟᭜᭟ᬁᬀ᭚᭝ᬒᬁ", false);
+    const expected = 'pi.ṣě,|/*~":Oṁ';
+    expect(result).toEqual(expected);
+  });
 });

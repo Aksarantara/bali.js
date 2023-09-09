@@ -12,7 +12,7 @@ import { BaliConst } from "../constants/constants";
  * toSundanese("Wih, geulis euy!")
  * // => ᮝᮤᮂ, ᮌᮩᮜᮤᮞ᮪ ᮉᮚ᮪!
  */
-const toBalinese = (input: string, toSasak: boolean = false, debug: boolean = false): string => {
+const toBalinese = (input: string, toSasak: boolean = false): string => {
   /* Normalize input */
   input = input.trim();
   // console.log(BaliConst.REGEX.CAPTURE_LATIN);
@@ -27,7 +27,7 @@ const toBalinese = (input: string, toSasak: boolean = false, debug: boolean = fa
   let output = "";
   if (syllables.length > 0) {
     for (const group of syllables) {
-      output += getTransliteration(group, output.charAt(output.length - 1), toSasak, debug);
+      output += getTransliteration(group, output.charAt(output.length - 1), toSasak);
     }
   }
   return output;
@@ -36,31 +36,10 @@ const toBalinese = (input: string, toSasak: boolean = false, debug: boolean = fa
 /**
  * @description Converts the already broken down syllable into Sundanese script
  */
-const getTransliteration = (
-  groups: RegExpMatchArray,
-  prev_char: string,
-  sasak: boolean = false,
-  debug: boolean = false
-): string => {
+const getTransliteration = (groups: RegExpMatchArray, prev_char: string, sasak: boolean = false): string => {
   /* Assign each capture groups into variable names */
-  let [space, digit_punc, suara, hindu, consonant, pasangan, vowel, tengenan, consonantStandalone, dotcomma] =
-    groups.slice(1, 10);
-  if (debug) {
-    console.log(BaliConst.REGEX.CAPTURE_LATIN);
-    console.log(
-      `
-    space: ${space},
-    digpunc: ${digit_punc},
-    suara: ${suara},
-    hnd: ${hindu},
-    cons: ${consonant},
-    psgn: ${pasangan},
-    vow: ${vowel},
-    teng: ${tengenan},
-    consS: ${consonantStandalone},
-    dot: ${dotcomma}`
-    );
-  }
+  let [space, dotcomma, digit_punc, suara, hindu, consonant, pasangan, vowel, tengenan, consonantStandalone] =
+    groups.slice(1, 11);
 
   const builder = new SyllableBuilder();
 

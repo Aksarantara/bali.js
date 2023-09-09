@@ -17,10 +17,10 @@ namespace BaliConst {
   const LATIN = {
     CONSONANTS: `KH|TS|SY|\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJRL]`, //
     CONSONANTS_TENGENAN: `ng|[rh]`,
-    DIGITS: `[\\d]`,
+    DIGITS: `[\\d]+`,
     DIGITS_PUNC: `[\\d]+|\\/[:()'"<>{}]?!]`,
     HINDU: `@|\\*|\\~`,
-    DOT_COMMA: `[.,\\/":\\|]`,
+    DOT_COMMA: `[\.,\\/":\\|]`,
     SPACE: `[ _]`,
     VOWELS: `aa|ai|au|ae|ao|ia|ii|iu|ie|io|ua|ui|uu|ue|uo|ea|ei|eu|eo|xa|xi|xu|xe|xo|oa|oi|ou|oe|UA|IA|[aiueox]`, //
     SUARA: `AA|II|UU|AI|AU|RX|LX|[AIUEO]`,
@@ -36,8 +36,8 @@ namespace BaliConst {
     SUARA: `[\\u1B05-\\u1B0A\\u1B0F-\\u1B12\\u1B0B-\\u1B0E]`,
     VOWELS: `[\\u1B35-\\u1B43\\u1B3A-\\u1B3D]`,
     ADEG: `[\\u1B44]`,
-    PADA: `[\\u1B5A-\\u1B5D\\u1B5F-\\u1B60]`,
-    HINDU: `[\\u1B00-\\u1B01]`,
+    PADA: `᭟᭜᭟|[\\u1B5A-\\u1B60]`,
+    HINDU: `ᬒᬁ|[\\u1B00-\\u1B01]`,
     SPACE: `[ \\u200B\\u200C]`,
     CARIK: `[\\u1B5E]`,
   };
@@ -45,6 +45,8 @@ namespace BaliConst {
     /* Capturing Latin characters that corresponds to a valid Balinese glyph */
     CAPTURE_LATIN: [
       `(${LATIN.SPACE})`,
+      `|`,
+      `(${LATIN.DOT_COMMA})`,
       `|`,
       `(${LATIN.DIGITS})`,
       `|`,
@@ -61,17 +63,15 @@ namespace BaliConst {
       `(?!${LATIN.VOWELS})`,
       `|`,
       `(${LATIN.CONSONANTS})`,
-      `|`,
-      `(${LATIN.DOT_COMMA})`,
     ].join(""),
     /* Capturing Sundanese characters that corresponds to a valid Latin glyph */
     CAPTURE_BALI: [
       `(${BALI.SPACE})`,
       `|(?:${BALI.CARIK})?(${BALI.ANGKA})(?:${BALI.CARIK})?`,
+      `|(${BALI.HINDU})`,
       `|(${BALI.WIANJANA})(${BALI.REREKAN})?(${BALI.ADEG})?(${BALI.VOWELS})?(${BALI.TENGENAN})?`,
       `|(${BALI.SUARA})(${BALI.TENGENAN})?`,
       `|(${BALI.PADA})`,
-      `|(${BALI.HINDU})`,
     ].join(""),
   };
 }
