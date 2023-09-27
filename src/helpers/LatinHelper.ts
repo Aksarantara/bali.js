@@ -1,9 +1,14 @@
-import { LatinChars } from "../constants/constants";
+import { LatinChars, BaliChars } from "../constants/constants";
 
 /**
  * @description Provides many helper function to get Latin characters from Sundanese characters
  */
 namespace LatinHelper {
+  export const getStandardLatin = (char: string): string => {
+    if (char == null) return "";
+    if (char in BaliChars.STANDARD_LATIN) return BaliChars.STANDARD_LATIN[char];
+    return char;
+  };
   /**
    * @description Returns the corresponding Ngalagena and Swara character
    * @param char The character to be transliterated

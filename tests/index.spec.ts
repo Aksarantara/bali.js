@@ -1,4 +1,4 @@
-import { toBalinese, toLatin } from "../src";
+import { toBalinese, toLatin, toStandardLatin } from "../src";
 
 describe("Basic functionality tests", () => {
   it("should convert all basic Wianjana", () => {
@@ -110,6 +110,15 @@ describe("Basic functionality tests toStandardLatin", () => {
   it("should convert all basic Wianjana", () => {
     const result = toLatin("ᬓᬔᬕᬖᬗᬘᬙᬚᬛᬜᬬᬢᬝᬤᬟᬦᬡᬭᬲᬱᬰᬧᬨᬩᬪᬫᬮᬯᬳᬧᬓᬧᬲ", false);
     const expected = "kakhagaghangacachajajhanyayataṭadaḍanaṇarasaṣaśapaphababhamalawahapakapasa";
+    expect(result).toEqual(expected);
+  });
+
+  it("toStandardLatin should work", () => {
+    const result = toStandardLatin(
+      "AAIIUUAIAUKagaGangacaCajaJanyayataTa daDanaNarasaSashapaPabaBamaRXLXrxlx^ta^Ta^da^DaSYxKHx@17./"
+    );
+    const expected =
+      "ĀĪŪAiAukhagaghangacachajajhanyayataṭa daḍanaṇarasaṣaśapaphababhamaṝěḹěṛěḷěṭhathadhaḍhasyěḫěOṁ17./";
     expect(result).toEqual(expected);
   });
 

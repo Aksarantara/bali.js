@@ -16,6 +16,8 @@ namespace BaliConst {
   /* Regex for various type of valid Latin glyph for Balinese */
   const LATIN = {
     CONSONANTS: `KH|TS|SY|\\^t|\\^T|\\^d|\\^D|ng|ny|sh|[hncrkdtswlpjymgbzfvqDNSTKGCPBJRL]`, //
+    UNSTANDARD: `KH|TS|SY|\\^t|\\^T|\\^d|\\^D|sh|AA|II|UU|AI|AU|UA|IA|RX|Rx|LX|Lx|lx|rx|[xDNSTKGCPBJRL@]`,
+    STANDARD: `ng|ny|sh|[aiueohncrkdtswlpjymgbzfvq ]`,
     CONSONANTS_TENGENAN: `ng|[rh]`,
     DIGITS: `[\\d]+`,
     DIGITS_PUNC: `[\\d]+|\\/[:()'"<>{}]?!]`,
@@ -72,6 +74,16 @@ namespace BaliConst {
       `|(${BALI.WIANJANA})(${BALI.REREKAN})?(${BALI.ADEG})?(${BALI.VOWELS})?(${BALI.TENGENAN})?`,
       `|(${BALI.SUARA})(${BALI.TENGENAN})?`,
       `|(${BALI.PADA})`,
+    ].join(""),
+    CAPTURE_UNSTANDARD: [
+      `(${LATIN.UNSTANDARD})`,
+      `|(${LATIN.STANDARD})`,
+      `|`,
+      `(${LATIN.DOT_COMMA})`,
+      `|`,
+      `(${LATIN.DIGITS})`,
+      `|`,
+      `(${LATIN.HINDU})`,
     ].join(""),
   };
 }
@@ -228,6 +240,8 @@ namespace BaliChars {
     UU: "Ū",
     AI: "Ai",
     AU: "Au",
+    UA: "ua",
+    IA: "ia",
     RX: "ṝě",
     LX: "ḹě",
     Rx: "ṝě",
