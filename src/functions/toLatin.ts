@@ -29,7 +29,8 @@ export const toLatin = (input: string, reversible: boolean = true, sasak: boolea
       output += getTransliteration(group, reversible, sasak);
     }
   }
-  return output.replace(/\s{2,}/g, " ");
+  if (output !== "") return output.replace(/\s{2,}/g, " ");
+  return input;
 };
 
 /**
